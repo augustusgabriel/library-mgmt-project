@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from .models import Genres
+from .models import Genre
 from .serializers import GenreSerializer
 
 # Create your views here.
 class GenreViewSet(viewsets.ModelViewSet):
-    queryset = Genres.objects.all()
+    queryset = Genre.objects.all()
     serializer_class = GenreSerializer
