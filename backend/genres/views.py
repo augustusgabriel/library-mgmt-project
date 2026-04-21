@@ -6,3 +6,4 @@ from .serializers import GenreSerializer
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    pagination_class = None
