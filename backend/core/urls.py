@@ -19,7 +19,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('users.urls', namespace='users')),
-    path('api/v1/', include('genres.urls', namespace='genres')),
-    path('api/v1/', include('books.urls', namespace='books')),
+    path('api/v1/', include([
+        path('users/', include('users.urls', namespace='users')),
+        path('genres/', include('genres.urls', namespace='genres')),
+        path('books/', include('books.urls', namespace='books')),
+    ])),
 ]

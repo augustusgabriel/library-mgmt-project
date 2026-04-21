@@ -3,10 +3,14 @@ from rest_framework.routers import DefaultRouter
 from .views import BookViewSet
 
 
-app_name = 'Books'
+app_name = 'books'
 
 router = DefaultRouter()
 
-router.register(r'books', BookViewSet, basename='book')
+router.register(r'', BookViewSet, basename='book')
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('<int:book_id>/copies/', include('bookcopies.urls'))
+]
+
+urlpatterns += router.urls
