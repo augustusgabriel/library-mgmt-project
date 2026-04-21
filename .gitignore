@@ -9,6 +9,8 @@ instance/
 .pytest_cache/
 .coverage
 htmlcov/
+migrations/
+db.sqlite3
 
 # Virtual environments
 .venv
