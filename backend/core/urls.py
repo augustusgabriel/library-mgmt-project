@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('users.urls', namespace='users')),
     path('api/v1/', include('genres.urls', namespace='genres')),
+    path('api/v1/', include('books.urls', namespace='books')),
 ]
