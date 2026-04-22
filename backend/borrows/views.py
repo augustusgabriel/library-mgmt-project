@@ -1,16 +1,14 @@
-from rest_framework import viewsets, filters # Filters serve apenas como barra de pesquisa
+from rest_framework import viewsets
 from .models import Borrow
 from .serializers import BorrowSerializer
+from .filters import BorrowFilter
 
 # Create your views here.
 class BorrowViewSet(viewsets.ModelViewSet):
     queryset = Borrow.objects.all()
     serializer_class = BorrowSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-
-    search_fields = ['due_date']
-
-    ordering_fields = ['due_date', 'status', 'user_username']
+    filterset_class = BorrowFilter
+    ordering_fields = ['user_username', 'borrow_date', 'due_date']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

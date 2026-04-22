@@ -1,19 +1,14 @@
 from rest_framework import viewsets
 from .models import BookCopy
 from .serializers import BookCopySerializer
+from .filters import BookCopyFilter
 
 # Create your views here.
 class BookCopyViewSet(viewsets.ModelViewSet):
     serializer_class = BookCopySerializer
+    filterset_class = BookCopyFilter
 
     def get_queryset(self):
-        queryset = BookCopy.objects.all()
+        book_id = self.kwargs.get('book_id')
 
-        only_available = self.request.query_params.get('available')
-
-        if only_available:
-            is_available = only_available.lower() in ['true', '1', 'yes', 't']
-            if is_available:
-                queryset = queryset.filter(status='AVAILABLE')
-        
-        return queryset.order_by('book__title')
+        return BookCopy.objects.filter(book_id=book_id)
