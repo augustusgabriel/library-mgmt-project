@@ -3,9 +3,12 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
+import { setupInterceptors } from './services/interceptors'
 
 function App() {
   const [count, setCount] = useState(0)
+
+  setupInterceptors();
 
   return (
     <>
