@@ -20,12 +20,14 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from users.views import LogoutViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/logout/', LogoutViewSet.as_view(), name='auth_logout'),
     path('api/v1/', include([
         path('users/', include('users.urls', namespace='users')),
         path('genres/', include('genres.urls', namespace='genres')),
