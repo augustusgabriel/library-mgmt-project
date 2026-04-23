@@ -21,3 +21,8 @@ export async function refreshToken(){
     const response = await api.post(`${import.meta.env.VITE_API_AUTH_URL}/refresh`);
     return response.data;
 }
+
+export async function getMe() {
+    const response = await api.get(`${import.meta.env.VITE_API_RESOURCES_URL}/users/me`);
+    return response.data;
+}
