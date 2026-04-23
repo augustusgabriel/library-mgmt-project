@@ -13,6 +13,9 @@ export function setupInterceptors(){
         async error => { // caso API responda com erro
             const originalRequest = error.config as CustomAxiosRequestConfig; // pega request original
 
+            if (originalRequest.url?.includes('/token')) {
+                return Promise.reject(error);
+            }
             // Se erro foi 401 e é o 1° retry
             if (error.response?.status === 401 && !originalRequest._retry) {
                 originalRequest._retry = true; // Modifica valor do retry pra evitar loop
@@ -20,8 +23,9 @@ export function setupInterceptors(){
                 try {
                     await refreshToken(); // tenta renovar token
                     return api(originalRequest); // após renovar, refaz request original
-                } catch {
+                } catch (refreshError) {
                     logout(); // se não renovou, logout
+                    return Promise.reject(refreshError);
                 }
             }
 
