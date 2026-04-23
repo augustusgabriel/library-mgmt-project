@@ -14,14 +14,21 @@ class UserViewSet(viewsets.ModelViewSet):
 class LogoutViewSet(APIView):
     def post(self, request):
         try:
-            refresh_token = request.data.get('Refresh')
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+            refresh_token = request.COOKIES.get('refresh_token')
 
-            return Response(
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            
+            response = Response(
                 {"message": "Logout realizado com sucesso."},
                 status=status.HTTP_205_RESET_CONTENT
             )
+
+            response.delete_cookie("access_token")
+            response.delete_cookie("refresh_token")
+
+            return response
         except Exception:
             return Response(
                 {"error": "Token inválido ou não fornecido."},
