@@ -36,9 +36,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class LogoutViewSet(APIView):
+    serializer_class = UserSerializer
+    
     def post(self, request):
         try:
-            refresh_token = request.COOKIES.get('refresh_token')
+            refresh_token = request.data.get('refresh_token')
 
             if refresh_token:
                 token = RefreshToken(refresh_token)
