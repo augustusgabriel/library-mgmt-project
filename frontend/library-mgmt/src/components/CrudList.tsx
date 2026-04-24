@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FormFeedback, type FeedbackMessage } from "./FormFeedback";
 
 type Props = {
     title: string;
@@ -21,6 +22,17 @@ export default function CrudList({
         const [form, setForm] = useState<any>({});
         const [editingId, setEditingId] = useState<number | null>(null);
 
+        const [message, setMessage] = useState<FeedbackMessage | null>(null);
+        const [loading, setLoading] = useState(false);
+
+        const notify = (text: string, type: 'success' | 'error', details?: any) => {
+            setMessage({ text, type, details });
+
+            if (type === 'success') {
+                setTimeout(() => setMessage(null), 5000); // some apos 5s
+            }
+        }
+
         async function fetchData(){
             const res = await getAll();
             setItems(res.data.results || res.data);
@@ -36,16 +48,27 @@ export default function CrudList({
 
         async function handleSubmit(e: any) {
             e.preventDefault();
+            setLoading(true);
 
-            if (editingId) {
-                await update(editingId, form);
+            try {
+                if (editingId) {
+                    await update(editingId, form);
+                    notify("Atualizado com sucesso!", "success");
+                } else {
+                    await create(form);
+                    notify("Adicionado com sucesso!", "success");
+                }
+
+                setForm({});
                 setEditingId(null);
-            } else {
-                await create(form)
+                fetchData();
+            } catch (error: any) {
+                const data = error.response?.data;
+                const errorMsg = data?.message || "Erro ao processar request.";
+                notify(errorMsg, "error", data?.details);
+            } finally {
+                setLoading(false);
             }
-
-            setForm({});
-            fetchData();
         }
 
         async function handleEdit(item: any) {
@@ -62,6 +85,9 @@ export default function CrudList({
             <div>
                 <h2>{title}</h2>
 
+                {/* Mensagem de Feedback */}
+                <FormFeedback message={message} />
+
                 {/* FORM */}
                 <form onSubmit={handleSubmit}>
                     {fields.map((field) => (
@@ -70,11 +96,16 @@ export default function CrudList({
                             placeholder={field}
                             value={form[field] || ""}
                             onChange={(e) => handleChange(e, field)}
+                            disabled={loading}
                         />
                     ))}
-                    <button type="submit">
-                        {editingId ? "Atualizar": "Criar"}
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Salvando..." : (editingId ? "Atualizar": "Criar")}
                     </button>
+                    {editingId && 
+                    <button onClick={() => {setEditingId(null); setForm({});}}>
+                        Cancelar
+                    </button>}
                 </form>
 
                 {/* LISTA */}
@@ -87,7 +118,12 @@ export default function CrudList({
                                 Editar
                             </button>
 
-                            <button onClick={() => handleDelete(item.id)}>
+                            <button onClick={() => 
+                                {if (window.confirm("Deseja realmente excluir?")) 
+                                handleDelete(item.id)
+                            }}
+                            style={{ color: 'red' }}
+                            >
                                 Deletar
                             </button>
                         </li>
