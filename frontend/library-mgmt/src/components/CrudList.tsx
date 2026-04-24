@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { FormFeedback, type FeedbackMessage } from "./FormFeedback";
+import FilterBar from "./FilterBar";
 
 type Props = {
     title: string;
     fields: string[];
-    getAll: () => Promise<any>;
+    getAll: (param: {}) => Promise<any>;
     create: (data: any) => Promise<any>;
     update: (id: number, data: any) => Promise<any>;
     remove: (id: number) => Promise<any>;
@@ -33,8 +34,8 @@ export default function CrudList({
             }
         }
 
-        async function fetchData(){
-            const res = await getAll();
+        async function fetchData(params = {}){
+            const res = await getAll(params);
             setItems(res.data.results || res.data);
         }
 
@@ -84,6 +85,11 @@ export default function CrudList({
         return (
             <div>
                 <h2>{title}</h2>
+
+                <FilterBar
+                    filters={["title", "author", "genre"]}
+                    onFilter={fetchData}
+                />
 
                 {/* Mensagem de Feedback */}
                 <FormFeedback message={message} />

@@ -2,7 +2,7 @@ import api from "./api";
 
 const BOOKS_URL = `${import.meta.env.VITE_API_RESOURCES_URL}/books/`;
 
-export const getBooks = () => api.get(`${BOOKS_URL}`);
+export const getBooks = (params?: any) => api.get(`${BOOKS_URL}`, { params });
 export const getBook = (id: number) => api.get(`${BOOKS_URL}${id}/`);
 
 export const createBook = (data: any) => 
