@@ -42,9 +42,13 @@ class LogoutViewSet(APIView):
         try:
             refresh_token = request.data.get('refresh_token')
 
-            if refresh_token:
-                token = RefreshToken(refresh_token)
-                token.blacklist()
+            if not refresh_token:
+                return Response(
+                    {"error": "Refresh Token é obrigatório"}, status=400
+                )
+
+            token = RefreshToken(refresh_token)
+            token.blacklist()
             
             response = Response(
                 {"message": "Logout realizado com sucesso."},
