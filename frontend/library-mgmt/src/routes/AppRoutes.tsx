@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Books from "../pages/Books";
 import Users from "../pages/Users";
-
+import Sidebar from "../components/Sidebar";
 
 function PrivateRoute() {
     const token = localStorage.getItem("access");
@@ -19,8 +19,10 @@ export default function AppRoutes() {
             <Route path="/register" element={<Register />} />
 
             <Route element={<PrivateRoute />}>
-                <Route path="/" element={<Users />} />
-                <Route path="/books" element={<Books />} />
+                <Route element={<Sidebar />}>
+                    <Route path="/" element={<Users />} />
+                    <Route path="/books" element={<Books />} />
+                </Route>
             </Route>
         </Routes>
     );
