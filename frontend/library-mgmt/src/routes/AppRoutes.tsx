@@ -4,12 +4,17 @@ import type { JSX } from "react";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Books from "../pages/Books";
+import Users from "../pages/Users";
 
 
 function PrivateRoute({ children }: { children: JSX.Element}) {
-    const isAuthenticated = true;
+    const token = localStorage.getItem("access");
 
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    if (!token) {
+        return <Navigate to={'/login'} replace />
+    }
+
+    return children;
 }
 
 export default function AppRoutes() {
@@ -22,7 +27,7 @@ export default function AppRoutes() {
                 path="/"
                 element={
                     <PrivateRoute>
-                        <Books />
+                        <Users />
                     </PrivateRoute>
                 }
             />
