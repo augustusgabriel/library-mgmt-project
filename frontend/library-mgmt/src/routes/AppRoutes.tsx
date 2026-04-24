@@ -1,5 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import type { JSX } from "react";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -7,14 +6,10 @@ import Books from "../pages/Books";
 import Users from "../pages/Users";
 
 
-function PrivateRoute({ children }: { children: JSX.Element}) {
+function PrivateRoute() {
     const token = localStorage.getItem("access");
 
-    if (!token) {
-        return <Navigate to={'/login'} replace />
-    }
-
-    return children;
+    return token ? <Outlet /> : <Navigate to={"/login"} replace />
 }
 
 export default function AppRoutes() {
@@ -23,14 +18,10 @@ export default function AppRoutes() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            <Route
-                path="/"
-                element={
-                    <PrivateRoute>
-                        <Users />
-                    </PrivateRoute>
-                }
-            />
+            <Route element={<PrivateRoute />}>
+                <Route path="/" element={<Users />} />
+                <Route path="/books" element={<Books />} />
+            </Route>
         </Routes>
     );
 }
