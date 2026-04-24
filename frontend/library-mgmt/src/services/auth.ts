@@ -8,7 +8,7 @@ export async function login(username: string, password: string) {
         password
     });
 
-    localStorage.setItem("access", response.data.acess);
+    localStorage.setItem("access", response.data.access);
     localStorage.setItem("refresh", response.data.refresh);
 
     return response.data;
@@ -16,9 +16,10 @@ export async function login(username: string, password: string) {
 
 export async function logout(){
     try{
-        await api.post(`${LOGOUT_URL}`);
-    } catch{
-
+        const refresh = localStorage.getItem('refresh');
+        await api.post(`${LOGOUT_URL}`, { refresh_token: refresh });
+    } catch (error) {
+        console.error("Erro ao deslogar do server.");
     } finally {
         localStorage.clear();
         window.location.href = '/login';
