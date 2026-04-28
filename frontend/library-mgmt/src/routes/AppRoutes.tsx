@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Books from "../pages/Books";
 import Users from "../pages/Users";
+import Genres from "../pages/Genres";
 import Sidebar from "../components/Sidebar";
 
 function PrivateRoute() {
@@ -22,6 +23,7 @@ export default function AppRoutes() {
                 <Route element={<Sidebar />}>
                     <Route path="/" element={<Users />} />
                     <Route path="/books" element={<Books />} />
+                    <Route path="/genres" element={<Genres />} />
                 </Route>
             </Route>
         </Routes>

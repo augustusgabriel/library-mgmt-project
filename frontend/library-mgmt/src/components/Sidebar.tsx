@@ -14,6 +14,7 @@ export default function Sidebar(){
                 <nav style={{ display:"flex", flexDirection: "column", gap: "10px" }}>
                     <Link to={"/"} >Usuários</Link>
                     <Link to={"/books"} >Books</Link>
+                    <Link to={"/genres"} >Genres</Link>
                 </nav>
 
                 <button onClick={logout} style={{ marginTop: "20px" }}>Sair</button>
