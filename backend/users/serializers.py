@@ -32,3 +32,9 @@ class UserSerializer(serializers.ModelSerializer):
         
         instance.save()
         return instance
+
+class LogoutRequestSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField()
+
+class LogoutResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()

@@ -3,10 +3,23 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
+from drf_spectacular.utils import extend_schema
 from .models import CustomUser
-from .serializers import UserSerializer
+from .serializers import (
+    UserSerializer,
+    LogoutRequestSerializer,
+    LogoutResponseSerializer,
+)
+from core.schema import global_errors
 
 # Create your views here.
+@extend_schema(
+    tags=["Users"],
+    responses={
+        200: UserSerializer,
+        **global_errors(400, 401, 403, 500)
+    }
+)
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
@@ -36,15 +49,22 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class LogoutViewSet(APIView):
-    serializer_class = UserSerializer
-    
+
+    @extend_schema(
+            request=LogoutRequestSerializer,
+            responses={
+                205: LogoutResponseSerializer,
+                **global_errors(400, 401, 403, 500)
+            }
+    )
     def post(self, request):
         try:
             refresh_token = request.data.get('refresh_token')
 
             if not refresh_token:
                 return Response(
-                    {"error": "Refresh Token é obrigatório"}, status=400
+                    {"error": "Refresh Token é obrigatório"},
+                    status=status.HTTP_400_BAD_REQUEST
                 )
 
             token = RefreshToken(refresh_token)

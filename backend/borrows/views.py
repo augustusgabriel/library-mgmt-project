@@ -2,8 +2,17 @@ from rest_framework import viewsets
 from .models import Borrow
 from .serializers import BorrowSerializer
 from .filters import BorrowFilter
+from drf_spectacular.utils import extend_schema
+from core.schema import global_errors
 
 # Create your views here.
+@extend_schema(
+    tags=["Borrows"],
+    responses={
+        200: BorrowSerializer,
+        **global_errors(400, 401, 403, 500)
+    }
+)
 class BorrowViewSet(viewsets.ModelViewSet):
     queryset = Borrow.objects.all()
     serializer_class = BorrowSerializer
