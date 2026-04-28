@@ -3,13 +3,23 @@ import {
     getBooks,
     createBook,
     updateBook,
-    deleteBook } from "../services/books";
+    deleteBook 
+} from "../services/crud/books";
+
+import { 
+    type Book,
+    displayFields,
+    formFields,
+    bookFilters 
+} from "../types/Book";
 
 export default function Books(){
     return (
-        <CrudList 
+        <CrudList<Book>
             title="Books"
-            fields={["title", "author", "number_pages", "genre", "genre_name"]}
+            formFields={formFields}
+            displayFields={displayFields}
+            filterFields={bookFilters}
             getAll={getBooks}
             create={createBook}
             update={updateBook}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { updateUser, deleteUser } from "../services/users";
+import { updateUser, deleteUser } from "../services/crud/users";
 
 type Props = {
     user: any;

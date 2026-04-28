@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUsers } from "../services/users";
+import { getUsers } from "../services/crud/users";
 import UserItem from "../components/UserItem";
 
 export default function Users() {
