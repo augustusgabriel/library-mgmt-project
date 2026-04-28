@@ -2,25 +2,29 @@ import { useEffect, useState } from "react";
 import { FormFeedback, type FeedbackMessage } from "./FormFeedback";
 import FilterBar from "./FilterBar";
 
-type Props = {
+type Props<T> = {
     title: string;
-    fields: string[];
-    getAll: (param: {}) => Promise<any>;
-    create: (data: any) => Promise<any>;
-    update: (id: number, data: any) => Promise<any>;
+    formFields: (keyof T)[];
+    displayFields: (keyof T)[];
+    filterFields?: Partial<Record<keyof T, string>>
+    getAll: (param?: {}) => Promise<any>;
+    create: (data: Partial<T>) => Promise<any>;
+    update: (id: number, data: Partial<T>) => Promise<any>;
     remove: (id: number) => Promise<any>;
 }
 
-export default function CrudList({
+export default function CrudList<T>({
     title,
-    fields,
+    formFields,
+    displayFields,
+    filterFields,
     getAll,
     create,
     update,
     remove
-    }: Props) {
-        const [items, setItems] = useState<any[]>([]);
-        const [form, setForm] = useState<any>({});
+    }: Props<T>) {
+        const [items, setItems] = useState<T[]>([]);
+        const [form, setForm] = useState<Partial<T>>({});
         const [editingId, setEditingId] = useState<number | null>(null);
 
         const [message, setMessage] = useState<FeedbackMessage | null>(null);
@@ -86,22 +90,22 @@ export default function CrudList({
             <div>
                 <h2>{title}</h2>
 
-                <FilterBar
-                    filters={["title", "author", "genre"]}
+                {filterFields && <FilterBar
+                    filters={filterFields || {}}
                     onFilter={fetchData}
-                />
+                />}
 
                 {/* Mensagem de Feedback */}
                 <FormFeedback message={message} />
 
                 {/* FORM */}
                 <form onSubmit={handleSubmit}>
-                    {fields.map((field) => (
+                    {formFields.map((field) => (
                         <input
-                            key={field}
-                            placeholder={field}
-                            value={form[field] || ""}
-                            onChange={(e) => handleChange(e, field)}
+                            key={String(field)}
+                            placeholder={String(field)}
+                            value={(form[field] as any) || ""}
+                            onChange={(e) => handleChange(e, field as string)}
                             disabled={loading}
                         />
                     ))}
@@ -116,9 +120,9 @@ export default function CrudList({
 
                 {/* LISTA */}
                 <ul>
-                    {items.map((item) => (
+                    {items.map((item: any) => (
                         <li key={item.id}>
-                            {fields.map((f) => item[f]).join(" - ")}
+                            {displayFields.map((f) => item[f]).join(" - ")}
 
                             <button onClick={() => handleEdit(item)}>
                                 Editar
